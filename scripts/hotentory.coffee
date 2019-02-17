@@ -18,45 +18,38 @@ gh = require './proc/get_hotentory'
 
 module.exports = (robot) ->
 
+	hatebuMe = (keywords, url, msg) ->
+		gh.hatebuMe robot.name, keywords, url, (ret)-> 
+			for val in ret
+				# TODO どうにかしてスレッド型の投稿にしたい
+				msg.send {text:val, unfurl_links:true}
+
 	robot.respond /はて(ぶ|ブ)$/i, (msg) ->
 		url = 'http://b.hatena.ne.jp/hotentry/it.rss'
-		ret = gh.hatebuMe robot, "テクノロジー", url
-		for val in ret
-			msg.send {text:val, unfurl_links:true}
+		hatebuMe "テクノロジー", url, msg
 
 	robot.respond /はて(ぶ|ブ)( me)? (総合|世の中|政治と経済|経済|政治|生活|暮らし|学び|学習|テクノロジー|テクノロジ|エンタメ|エンターテイメント|アニメとゲーム|アニメ|ゲーム|おもしろ|動画|画像|動画と画像)/i, (msg) ->
 		keywords = msg.match[3]
 		text = ""
 		if keywords.match(/総合/)
 			url = 'http://feeds.feedburner.com/hatena/b/hotentry.rss'
-			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/世の中/)
 			url = 'http://b.hatena.ne.jp/hotentry/social.rss'
-			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/(政治と経済|政治|経済)/i)
 			url = 'http://b.hatena.ne.jp/hotentry/economics.rss'
-			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/暮らし/)
 			url = 'http://b.hatena.ne.jp/hotentry/life.rss'
-			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/(学び|学習)/i)
 			url = 'http://b.hatena.ne.jp/hotentry/knowledge.rss'
-			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/(テクノロジー|テクノロジ)/i)
 			url = 'http://b.hatena.ne.jp/hotentry/it.rss'
-			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/(エンタメ|エンターテイメント)/i)
 			url = 'http://b.hatena.ne.jp/hotentry/entertainment.rss'
-			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/(アニメとゲーム|アニメ|ゲーム)/i)
 			url = 'http://b.hatena.ne.jp/hotentry/game.rss'
-			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/(おもしろ)/i)
 			url = 'http://b.hatena.ne.jp/hotentry/fun.rss'
-			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/(動画|画像|動画と画像)/i)
 			url = 'http://feeds.feedburner.com/hatena/b/video.rss'
-			ret = gh.hatebuMe robot, msg, keywords, url
-
-		for val in ret
-			msg.send {text:val, unfurl_links:true}
+		
+		hatebuMe keywords, url, msg
