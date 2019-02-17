@@ -6,26 +6,26 @@ request = require 'request'
 parser = require 'xml2json'
 
 module.exports =
-	hatebuMe: (robot, keywords, url, cnt=3) ->
+	hatebuMe: (name, keywords, url, cb) ->
 	
-		text = "#{robot.name}が今日の#{keywords}系に関するニュースをお知らせするー\n\n"
+		text = "#{name}が今日の#{keywords}系に関するニュースをお知らせするー\n\n"
 		msg = [text]
-
-		# TODO どうにかしてスレッド型の投稿にしたい
-		# console.log res
 
 		options =
 			url : url
 			timeout : 2000
 			headers : {'user-agent': 'node title fetcher'}
+
 		request options, (error, response, body) ->
 			json = parser.toJson(body, { object : true })
 
-			i = cnt
+			i = 3
 			for val in json["rdf:RDF"]["item"]
 				text = "#{val.title}\n\n"
 				text = text + "#{val.link}"
 
 				i -= 1
 				msg.push(text)
-				return msg if i == 0
+				if i == 0
+					cb(msg)
+					return
