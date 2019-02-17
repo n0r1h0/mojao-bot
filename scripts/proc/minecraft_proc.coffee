@@ -3,7 +3,7 @@
 #
 
 proc = require 'child_process'
-util = require 'myutil'
+util = require './myutil'
 
 # 起動済みをチェック
 check_exists: (cb) ->

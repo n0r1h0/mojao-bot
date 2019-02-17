@@ -1,7 +1,7 @@
 # Description:
 #   マインクラフトコマンド群応対用スクリプト
 #
-mineproc = require 'proc/minecraft_proc'
+mineproc = require './proc/minecraft_proc'
 
 module.exports = (robot) ->
 	# マイクラ起動確認
