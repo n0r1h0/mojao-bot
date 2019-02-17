@@ -14,7 +14,7 @@
 #   hubot はてぶ <おもしろ> - 今日のはてぶホットエントリー(おもしろ)を取得します
 #   hubot はてぶ <動画> - 今日のはてぶホットエントリー(動画)を取得します
 #
-hatebuMe = require 'proc/get_hotentory'
+hatebuMe = require './proc/get_hotentory'
 
 module.exports = (robot) ->
 
