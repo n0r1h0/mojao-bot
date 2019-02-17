@@ -20,38 +20,43 @@ module.exports = (robot) ->
 
 	robot.respond /はて(ぶ|ブ)$/i, (msg) ->
 		url = 'http://b.hatena.ne.jp/hotentry/it.rss'
-		gh.hatebuMe robot, msg, "テクノロジー", url
+		ret = gh.hatebuMe robot, "テクノロジー", url
+		for val in ret
+			msg.send {text:val, unfurl_links:true}
 
 	robot.respond /はて(ぶ|ブ)( me)? (総合|世の中|政治と経済|経済|政治|生活|暮らし|学び|学習|テクノロジー|テクノロジ|エンタメ|エンターテイメント|アニメとゲーム|アニメ|ゲーム|おもしろ|動画|画像|動画と画像)/i, (msg) ->
 		keywords = msg.match[3]
 		text = ""
 		if keywords.match(/総合/)
 			url = 'http://feeds.feedburner.com/hatena/b/hotentry.rss'
-			gh.hatebuMe robot, msg, keywords, url
+			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/世の中/)
 			url = 'http://b.hatena.ne.jp/hotentry/social.rss'
-			gh.hatebuMe robot, msg, keywords, url
+			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/(政治と経済|政治|経済)/i)
 			url = 'http://b.hatena.ne.jp/hotentry/economics.rss'
-			gh.hatebuMe robot, msg, keywords, url
+			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/暮らし/)
 			url = 'http://b.hatena.ne.jp/hotentry/life.rss'
-			gh.hatebuMe robot, msg, keywords, url
+			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/(学び|学習)/i)
 			url = 'http://b.hatena.ne.jp/hotentry/knowledge.rss'
-			gh.hatebuMe robot, msg, keywords, url
+			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/(テクノロジー|テクノロジ)/i)
 			url = 'http://b.hatena.ne.jp/hotentry/it.rss'
-			gh.hatebuMe robot, msg, keywords, url
+			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/(エンタメ|エンターテイメント)/i)
 			url = 'http://b.hatena.ne.jp/hotentry/entertainment.rss'
-			gh.hatebuMe robot, msg, keywords, url
+			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/(アニメとゲーム|アニメ|ゲーム)/i)
 			url = 'http://b.hatena.ne.jp/hotentry/game.rss'
-			gh.hatebuMe robot, msg, keywords, url
+			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/(おもしろ)/i)
 			url = 'http://b.hatena.ne.jp/hotentry/fun.rss'
-			gh.hatebuMe robot, msg, keywords, url
+			ret = gh.hatebuMe robot, msg, keywords, url
 		if keywords.match(/(動画|画像|動画と画像)/i)
 			url = 'http://feeds.feedburner.com/hatena/b/video.rss'
-			gh.hatebuMe robot, msg, keywords, url
+			ret = gh.hatebuMe robot, msg, keywords, url
+
+		for val in ret
+			msg.send {text:val, unfurl_links:true}

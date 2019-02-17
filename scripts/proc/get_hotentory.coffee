@@ -6,11 +6,11 @@ request = require 'request'
 parser = require 'xml2json'
 
 module.exports =
-	hatebuMe: (robot, msg, keywords, url, cnt=3) ->
+	hatebuMe: (robot, keywords, url, cnt=3) ->
 	
 		text = "#{robot.name}が今日の#{keywords}系に関するニュースをお知らせするー\n\n"
 
-		msg.send text
+		msg.push(text)
 
 		# TODO どうにかしてスレッド型の投稿にしたい
 		# console.log res
@@ -28,5 +28,5 @@ module.exports =
 				text = text + "#{val.link}"
 
 				i -= 1
-				msg.send {text:text, unfurl_links:true}
-				return i if i == 0
+				msg.push(text)
+				return msg if i == 0
