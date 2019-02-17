@@ -9,8 +9,7 @@ module.exports =
 	hatebuMe: (robot, keywords, url, cnt=3) ->
 	
 		text = "#{robot.name}が今日の#{keywords}系に関するニュースをお知らせするー\n\n"
-
-		msg.push(text)
+		msg = [text]
 
 		# TODO どうにかしてスレッド型の投稿にしたい
 		# console.log res
