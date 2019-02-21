@@ -10,13 +10,15 @@ module.exports =
 	
 		text = "#{name}が今日の#{keywords}系に関するニュースをお知らせするー\n\n"
 		msg = [text]
+		# console.log(msg)
 
 		options =
 			url : url
 			timeout : 2000
 			headers : {'user-agent': 'node title fetcher'}
 
-		request options, (error, response, body) ->
+		request options, (error, response, body) =>
+			# console.log(body)
 			json = parser.toJson(body, { object : true })
 
 			i = 3
@@ -27,5 +29,5 @@ module.exports =
 				i -= 1
 				msg.push(text)
 				if i == 0
-					cb(msg)
+					cb msg
 					return
