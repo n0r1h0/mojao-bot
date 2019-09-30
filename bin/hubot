@@ -6,6 +6,15 @@ set -e
 
 npm install
 export PATH="node_modules/.bin:node_modules/hubot/node_modules/.bin:$PATH"
+export DEBUG=hubot-rss-reader*      # debug print
+export HUBOT_RSS_INTERVAL=600       # 600 sec (default)
+export HUBOT_RSS_HEADER=:japanese_goblin:      # RSS Header Emoji (default is "sushi")
+# export HUBOT_RSS_USERAGENT=hubot    # (default is "hubot-rss-reader/#{package_version}")
+export HUBOT_RSS_PRINTSUMMARY=true  # print summary (default is "true")
+export HUBOT_RSS_PRINTIMAGE=true    # print image in summary (default is "true")
+export HUBOT_RSS_PRINTERROR=false   # print error message (default is "true")
+export HUBOT_RSS_IRCCOLORS=false    # use IRC color message (default is "false")
+export HUBOT_RSS_LIMIT_ON_ADD=false # limit printing entries on add new feed. (default is 5)
 
 export HUBOT_SLACK_TOKEN=xoxb-56478835895-505411417970-3bdtLRrgV48e7lewoC7Ssf1I
 #coffee node_modules/.bin/hubot --name "mojao"

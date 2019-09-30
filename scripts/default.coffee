@@ -9,8 +9,19 @@ module.exports = (robot) ->
 	robot.error (err, res) ->
 
 	cron.set "0 0 9 * * *", ->
-		d = new Date().getHours()
-		robot.send {room: "general"}, "ヤッホー #{d} 時だよ"
-		ret = gh.hatebuMe robot, "テクノロジー", url
-		for val in ret
-			robot.send {room: "general"}, {text:val, unfurl_links:true}
+		url = 'http://b.hatena.ne.jp/hotentry/it.rss'
+		gh.hatebuMe robot.name, "テクノロジー", url, (ret) ->
+			d = new Date().getHours()
+			post="ヤッホー #{d} 時だよ\n"
+			for val in ret
+				post=post+val+"\n"
+			robot.send {room: "general"}, {text:post, unfurl_links:false}
+
+	cron.set "0 0 12 * * *", ->
+		url = 'http://b.hatena.ne.jp/hotentry/it.rss'
+		gh.hatebuMe robot.name, "テクノロジー", url, (ret) ->
+			d = new Date().getHours()
+			post="ヤッホー #{d} 時だよ\n"
+			for val in ret
+				post=post+val+"\n"
+			robot.send {room: "general"}, {text:post, unfurl_links:false}
