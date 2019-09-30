@@ -20,12 +20,9 @@ module.exports = (robot) ->
 
 	hatebuMe = (keywords, url, msg) ->
 		gh.hatebuMe robot.name, keywords, url, (ret)-> 
-			post=""
 			for val in ret
 				# TODO どうにかしてスレッド型の投稿にしたい
-				post=post+val+"\n"
-			msg.send {text:post, unfurl_links:false}
-
+				msg.send {text:val, unfurl_links:true}
 
 	robot.respond /はて(ぶ|ブ)$/i, (msg) ->
 		url = 'http://b.hatena.ne.jp/hotentry/it.rss'
