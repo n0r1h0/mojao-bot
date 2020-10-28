@@ -17,9 +17,6 @@ module.exports = (robot) ->
 				# msg.send { text: val, unfurl_links: false }
 			text = "今日の#{keywords}系に関するニュースはコチラ"
 			msg.send { text: text, as_user: true }
-			# msg.send { text: text, as_user: true, reply_broadcast: true }
-			if !msg.message.thread_ts?
-				msg.message.thread_ts = msg.message.item.ts
 			msg.send { text: ret.join(), unfurl_links: false }
 
 	robot.respond /はて(ぶ|ブ)$/i, (msg) ->
