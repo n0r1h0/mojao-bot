@@ -1,6 +1,6 @@
 {
   "name": "mojao",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "author": "Nor",
   "description": "A simple helpful robot for your Company",
@@ -25,6 +25,7 @@
     "xml2json": "^0.11.2"
   },
   "engines": {
-    "node": "0.10.x"
+    "node": "15.0.1",
+    "npm": "7.0.3"
   }
 }
