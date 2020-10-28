@@ -7,7 +7,6 @@ parser = require 'xml2json'
 
 module.exports =
 	hatebuMe: (name, keywords, url, cb) ->
-		msg = []
     options =
       url : url
       timeout : 2000

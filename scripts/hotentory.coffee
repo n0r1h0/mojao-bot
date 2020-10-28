@@ -20,7 +20,7 @@ module.exports = (robot) ->
 
 	hatebuMe = (keywords, url, msg) ->
 		text = "#{robot.name}が今日の#{keywords}系に関するニュースをお知らせする\n"
-    msg.send {text:text}
+    msg.send text
 
 		gh.hatebuMe robot.name, keywords, url, (ret)-> 
       for val in ret
