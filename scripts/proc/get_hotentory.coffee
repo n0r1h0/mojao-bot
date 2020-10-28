@@ -8,7 +8,7 @@ parser = require 'xml2json'
 module.exports =
 	hatebuMe: (name, keywords, url, cb) ->
 	
-		text = "#{name}が今日の#{keywords}系に関するニュースをお知らせするー\n\n"
+		text = "#{name}が今日の#{keywords}系に関するニュースをお知らせする\n"
 		msg = [text]
 		# console.log(msg)
 
@@ -21,10 +21,10 @@ module.exports =
 			# console.log(body)
 			json = parser.toJson(body, { object : true })
 
-			i = 3
+			i = 10
 			for val in json["rdf:RDF"]["item"]
-				text = "#{val.title}\n\n"
-				text = text + "#{val.link}"
+				text = "#{val.title}\n"
+				text = text + "#{val.link}\n"
 
 				i -= 1
 				msg.push(text)
