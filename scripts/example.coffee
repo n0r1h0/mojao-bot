@@ -10,8 +10,8 @@
 
 module.exports = (robot) ->
 
-  robot.hear /badger/i, (res) ->
-    res.send "リアクションげとー"
+  # robot.hear /badger/i, (res) ->
+  #   res.send "リアクションげとー"
 
   # robot.respond /open the (.*) doors/i, (res) ->
   #   doorType = res.match[1]
@@ -32,13 +32,13 @@ module.exports = (robot) ->
   #   res.send "#{res.message.text}? That's a Paddlin'"
   #
   #
-  enterReplies = ['やぁ', 'あなたが来た', 'こんにちは', 'ジャジャーン！', 'ようこそ！']
-  leaveReplies = ['元気でいてね', '待ってるよ', 'ばいばーい']
+  # enterReplies = ['やぁ', 'あなたが来た', 'こんにちは', 'ジャジャーン！', 'ようこそ！']
+  # leaveReplies = ['元気でいてね', '待ってるよ', 'ばいばーい']
   
-  robot.enter (res) ->
-    res.send res.random enterReplies
-  robot.leave (res) ->
-    res.send res.random leaveReplies
+  # robot.enter (res) ->
+  #   res.send res.random enterReplies
+  # robot.leave (res) ->
+  #   res.send res.random leaveReplies
   #
   # answer = process.env.HUBOT_ANSWER_TO_THE_ULTIMATE_QUESTION_OF_LIFE_THE_UNIVERSE_AND_EVERYTHING
   #
@@ -104,3 +104,7 @@ module.exports = (robot) ->
   # robot.respond /sleep it off/i, (res) ->
   #   robot.brain.set 'totalSodas', 0
   #   res.reply 'zzzzz'
+
+  replies = ['やぁ', 'なんだい？', 'こんにちは', 'モジャモジャ', 'ハローワールド']  
+  robot.respond /.*/i, (res) ->
+    res.send res.random replies
