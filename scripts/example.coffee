@@ -105,6 +105,6 @@ module.exports = (robot) ->
   #   robot.brain.set 'totalSodas', 0
   #   res.reply 'zzzzz'
 
-  # replies = ['やぁ', 'なんだい？', 'こんにちは', 'モジャモジャ', 'ハローワールド']  
+  # replies = ['やぁ', 'なんだい？', 'こんにちは', 'モジャモジャ', 'ハローワールド']
   # robot.respond /.*/i, (res) ->
   #   res.send res.random replies

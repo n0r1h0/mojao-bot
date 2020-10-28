@@ -6,15 +6,11 @@ request = require 'request'
 parser = require 'xml2json'
 
 module.exports =
-	hatebuMe: (name, keywords, url, cb) ->
-    options =
-      url : url
-      timeout : 2000
-      headers : {'user-agent': 'node title fetcher'}
+	hatebuMe = (name, keywords, url, cb) ->
+		options = { url: url, timeout: 2000, headers: { 'user-agent': 'node title fetcher' } }
 
-		request options, (error, response, body) =>
-			# console.log(body)
-			json = parser.toJson(body, { object : true })
+		request options, (error, response, body) ->
+			json = parser.toJson(body, { object: true })
 
 			i = 10
 			for val in json["rdf:RDF"]["item"]

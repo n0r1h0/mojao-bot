@@ -15,24 +15,26 @@
 #   hubot はてぶ <動画> - 今日のはてぶホットエントリー(動画)を取得します
 #
 gh = require './proc/get_hotentory'
+genre = '(総合|世の中|政治と経済|経済|政治|生活|暮らし|学び|学習|
+テクノロジー|テクノロジ|エンタメ|エンターテイメント|アニメとゲーム|アニメ|ゲーム|おもしろ|動画|画像|動画と画像)'
 
 module.exports = (robot) ->
 
 	hatebuMe = (keywords, url, msg) ->
-		text = "#{robot.name}が今日の#{keywords}系に関するニュースをお知らせする\n"
-    msg.send text
+		text = "#{robot.name}が今日の#{keywords}系に関するニュースをお知らせする"
+		msg.send text
 
-		gh.hatebuMe robot.name, keywords, url, (ret)-> 
-      for val in ret
-        if !msg.message.thread_ts?
-          msg.message.thread_ts = msg.message.rawMessage.ts
-        msg.send {text:val, unfurl_links:true}
+		gh.hatebuMe robot.name, keywords, url, (ret) ->
+			for val in ret
+				if !msg.message.thread_ts?
+					msg.message.thread_ts = msg.message.rawMessage.ts
+				msg.send { text: val, unfurl_links: true }
 
 	robot.respond /はて(ぶ|ブ)$/i, (msg) ->
 		url = 'http://b.hatena.ne.jp/hotentry/it.rss'
 		hatebuMe "テクノロジー", url, msg
 
-	robot.respond /はて(ぶ|ブ)( me)? (総合|世の中|政治と経済|経済|政治|生活|暮らし|学び|学習|テクノロジー|テクノロジ|エンタメ|エンターテイメント|アニメとゲーム|アニメ|ゲーム|おもしろ|動画|画像|動画と画像)/i, (msg) ->
+	robot.respond ///はて(ぶ|ブ)( me)? #{genre}///i, (msg) ->
 		keywords = msg.match[3]
 		text = ""
 		if keywords.match(/総合/)
@@ -55,5 +57,5 @@ module.exports = (robot) ->
 			url = 'http://b.hatena.ne.jp/hotentry/fun.rss'
 		if keywords.match(/(動画|画像|動画と画像)/i)
 			url = 'http://feeds.feedburner.com/hatena/b/video.rss'
-		
+
 		hatebuMe keywords, url, msg

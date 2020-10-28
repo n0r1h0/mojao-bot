@@ -10,33 +10,35 @@ module.exports = (robot) ->
 
 	cron.set "0 0 9 * * *", ->
 		d = new Date().getHours()
-		robot.send {room: "general"}, "ヤッホー #{d} 時だよ"
+		robot.send { room: "general" }, "ヤッホー #{d} 時だよ"
 		url = 'http://b.hatena.ne.jp/hotentry/it.rss'
 		gh.hatebuMe robot.name, "テクノロジー", url, (ret) ->
 			for val in ret
-				robot.send {room: "general"}, {text:val, unfurl_links:true}
+				if !robot.message.thread_ts?
+					robot.message.thread_ts = robot.message.rawMessage.ts
+				robot.send { room: "general" } , { text: val, unfurl_links: true }
 
 	cron.set "0 0 12 * * *", ->
 		d = new Date().getHours()
-		robot.send {room: "general"}, "ヤッホー #{d} 時だよ"
+		robot.send { room: "general" }, "ヤッホー #{d} 時だよ"
 		url = 'http://b.hatena.ne.jp/hotentry/it.rss'
 		gh.hatebuMe robot.name, "テクノロジー", url, (ret) ->
 			for val in ret
-				robot.send {room: "general"}, {text:val, unfurl_links:true}
+				robot.send { room: "general" }, { text: val, unfurl_links: true }
 
 	cron.set "0 0 18 * * *", ->
 		d = new Date().getHours()
-		robot.send {room: "general"}, "ヤッホー #{d} 時だよ"
+		robot.send { room: "general" }, "ヤッホー #{d} 時だよ"
 		url = 'http://b.hatena.ne.jp/hotentry/it.rss'
 		gh.hatebuMe robot.name, "テクノロジー", url, (ret) ->
 			for val in ret
-				robot.send {room: "general"}, {text:val, unfurl_links:true}
+				robot.send { room: "general" }, { text: val, unfurl_links: true }
 
 	cron.set "0 0 21 * * *", ->
 		d = new Date().getHours()
-		robot.send {room: "general"}, "ヤッホー #{d} 時だよ"
+		robot.send { room: "general" }, "ヤッホー #{d} 時だよ"
 		url = 'http://b.hatena.ne.jp/hotentry/it.rss'
 		gh.hatebuMe robot.name, "テクノロジー", url, (ret) ->
 			for val in ret
-				robot.send {room: "general"}, {text:val, unfurl_links:true}
+				robot.send { room: "general" }, { text: val, unfurl_links: true }
 
