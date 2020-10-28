@@ -1,6 +1,9 @@
 # Description:
 #   Example scripts for you to examine and try out.
 #
+# Commands:
+#   hubot 画像 <txt> google画像検索するよ
+#   hubot image <txt> google画像検索するよ
 
 cron = require './proc/cronbot'
 gh = require './proc/get_hotentory'
