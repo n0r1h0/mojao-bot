@@ -65,6 +65,6 @@ module.exports = (robot) ->
 		d = new Date().getHours()
 		robot.send { room: "general" }, "ヤッホー #{d} 時だよ"
 		url = 'http://b.hatena.ne.jp/hotentry/it.rss'
-		ds.fetchWeather "目黒", (text) ->
-			for t in text
-				msg.send { text: t, unfurl_links: true }
+		ds.fetchWeather "目黒", (currently, hourly, daily) ->
+			msg.send { text: currently[0], unfurl_links: true }
+			msg.send { text: currently[1], unfurl_links: true }
