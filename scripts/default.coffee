@@ -27,7 +27,23 @@ module.exports = (robot) ->
 		msg.send "えーっと"
 		yw.fetchRainfall msg.match[3], (text) ->
 			msg.send text
-	
+
+	robot.respond /雨(ふ|降)る(？)?$/i, (msg) ->
+		yw.fetchRainfall "目黒", (text) ->
+			msg.send text
+
+	robot.respond /雨(止|や)む(？)?$/i, (msg) ->
+		yw.fetchRainfall "目黒", (text) ->
+			msg.send text
+
+	robot.respond /雨(ふ|降)る(？)?(　| )(.+)$/i, (msg) ->
+		yw.fetchRainfall msg.match[4], (text) ->
+			msg.send text
+
+	robot.respond /雨(止|や)む(？)?(　| )(.+)$/i, (msg) ->
+		yw.fetchRainfall msg.match[4], (text) ->
+			msg.send text
+
 	robot.respond /(天気|tenki)(　| )([^ 　]+)$/i, (msg) ->
 		ds.fetchWeather msg.match[3], (currently, hourly, daily) ->
 			msg.send { text: currently[0], unfurl_links: true }
