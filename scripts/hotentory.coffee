@@ -19,6 +19,9 @@ gh = require './proc/get_hotentory'
 module.exports = (robot) ->
 
 	hatebuMe = (keywords, url, msg) ->
+		text = "#{robot.name}が今日の#{keywords}系に関するニュースをお知らせする\n"
+    msg.send {text:text}
+
 		gh.hatebuMe robot.name, keywords, url, (ret)-> 
       for val in ret
         if !msg.message.thread_ts?

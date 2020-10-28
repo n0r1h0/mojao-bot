@@ -7,15 +7,11 @@ parser = require 'xml2json'
 
 module.exports =
 	hatebuMe: (name, keywords, url, cb) ->
-	
-		text = "#{name}が今日の#{keywords}系に関するニュースをお知らせする\n"
-		msg = [text]
-		# console.log(msg)
-
-		options =
-			url : url
-			timeout : 2000
-			headers : {'user-agent': 'node title fetcher'}
+		msg = []
+    options =
+      url : url
+      timeout : 2000
+      headers : {'user-agent': 'node title fetcher'}
 
 		request options, (error, response, body) =>
 			# console.log(body)
@@ -30,4 +26,3 @@ module.exports =
 				msg.push(text)
 				if i == 0
 					cb msg
-					return
