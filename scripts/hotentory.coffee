@@ -20,10 +20,10 @@ module.exports = (robot) ->
 
 	hatebuMe = (keywords, url, msg) ->
 		gh.hatebuMe robot.name, keywords, url, (ret)-> 
-		for val in ret
-      if !msg.message.thread_ts?
-        msg.message.thread_ts = msg.message.rawMessage.ts
-      msg.send {text:val, unfurl_links:true}
+      for val in ret
+        if !msg.message.thread_ts?
+          msg.message.thread_ts = msg.message.rawMessage.ts
+        msg.send {text:val, unfurl_links:true}
 
 	robot.respond /はて(ぶ|ブ)$/i, (msg) ->
 		url = 'http://b.hatena.ne.jp/hotentry/it.rss'
