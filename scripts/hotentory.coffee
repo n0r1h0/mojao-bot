@@ -3,16 +3,7 @@
 #
 # Commands:
 #   hubot はてぶ - http://b.hatena.ne.jp/hotentry/it から今日のはてぶホットエントリー(テクノロジー)を取得します
-#   hubot はてぶ <総合> - 今日のはてぶホットエントリー(総合)を取得します
-#   hubot はてぶ <世の中> - 今日のはてぶホットエントリー(世の中)を取得します
-#   hubot はてぶ <政治と経済> - 今日のはてぶホットエントリー(政治と経済)を取得します
-#   hubot はてぶ <暮らし> - 今日のはてぶホットエントリー(暮らし)を取得します
-#   hubot はてぶ <学び> - 今日のはてぶホットエントリー(学び)を取得します
-#   hubot はてぶ <テクノロジー> - 今日のはてぶホットエントリー(テクノロジー)を取得します
-#   hubot はてぶ <エンタメ> - 今日のはてぶホットエントリー(エンタメ)を取得します
-#   hubot はてぶ <アニメとゲーム> - 今日のはてぶホットエントリー(アニメとゲーム)を取得します
-#   hubot はてぶ <おもしろ> - 今日のはてぶホットエントリー(おもしろ)を取得します
-#   hubot はてぶ <動画> - 今日のはてぶホットエントリー(動画)を取得します
+#
 #
 gh = require './proc/get_hotentory'
 genre = '(総合|世の中|政治と経済|経済|政治|生活|暮らし|学び|学習|
@@ -21,14 +12,15 @@ genre = '(総合|世の中|政治と経済|経済|政治|生活|暮らし|学び
 module.exports = (robot) ->
 
 	hatebuMe = (keywords, url, msg) ->
-		text = "#{robot.name}が今日の#{keywords}系に関するニュースをお知らせする"
-		msg.send text
-
 		gh.hatebuMe robot.name, keywords, url, (ret) ->
-			for val in ret
-				if !msg.message.thread_ts?
-					msg.message.thread_ts = msg.message.rawMessage.ts
-				msg.send { text: val, unfurl_links: true }
+			# for val in ret
+				# msg.send { text: val, unfurl_links: false }
+			text = "今日の#{keywords}系に関するニュースはコチラ"
+			msg.send { text: text, as_user: true }
+			# msg.send { text: text, as_user: true, reply_broadcast: true }
+			if !msg.message.thread_ts?
+				msg.message.thread_ts = msg.message.item.ts
+			msg.send { text: ret.join(), unfurl_links: false }
 
 	robot.respond /はて(ぶ|ブ)$/i, (msg) ->
 		url = 'http://b.hatena.ne.jp/hotentry/it.rss'

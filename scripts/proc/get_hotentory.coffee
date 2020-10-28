@@ -6,12 +6,12 @@ request = require 'request'
 parser = require 'xml2json'
 
 module.exports =
-	hatebuMe = (name, keywords, url, cb) ->
+	hatebuMe: (name, keywords, url, cb) ->
 		options = { url: url, timeout: 2000, headers: { 'user-agent': 'node title fetcher' } }
 
-		request options, (error, response, body) ->
+		request(options, (error, response, body) ->
 			json = parser.toJson(body, { object: true })
-
+			msg = []
 			i = 10
 			for val in json["rdf:RDF"]["item"]
 				text = "#{val.title}\n"
@@ -21,3 +21,4 @@ module.exports =
 				msg.push(text)
 				if i == 0
 					cb msg
+					return)

@@ -3,7 +3,7 @@
 #
 # mineproc = require './proc/minecraft_proc'
 
-# module.exports = (robot) ->
+module.exports = (robot) ->
 # 	# マイクラ起動確認
 # 	robot.respond /(minecraft|マイクラ|マインクラフト) *$/i, (res) ->
 # 		mineproc.check_exists (ret) ->
