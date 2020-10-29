@@ -11,14 +11,11 @@ module.exports =
 
 		request(options, (error, response, body) ->
 			json = parser.toJson(body, { object: true })
-			msg = []
+			text = []
 			i = 10
 			for val in json["rdf:RDF"]["item"]
-				text = "#{val.title}\n"
-				text = text + "#{val.link}\n"
-
+				text.push { title: val.title, link: val.link }
 				i -= 1
-				msg.push(text)
 				if i == 0
-					cb msg
+					cb text
 					return)

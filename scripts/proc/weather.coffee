@@ -32,38 +32,32 @@ module.exports =
 					useQueryString: true
 				}
 
-			request(options, (error, response, body) ->
+			request options, (error, response, body) ->
 				json = JSON.parse(body)
 				currently = ["#{json.timezone} の現在の天気",
-				"#{json.currently.summary}\n" +
-				"#{DARK_SKY_IMAGE_URL}/#{json.currently.icon}.png\n" +
-				"気温：#{json.currently.temperature}\n" +
-				"降水量：#{json.currently.precipIntensity}mm\n" +
-				"降水確率：#{Math.round(json.currently.precipProbability * 100)}%\n" +
-				"湿度：#{Math.round(json.currently.humidity * 100)}%"]
+					"#{json.currently.summary}\n" +
+					"気温/湿度：#{json.currently.temperature}°C / " +
+					"#{Math.round(json.currently.humidity * 100)}%\n" +
+					"降水量/降水確率：#{json.currently.precipIntensity}mm / "+
+					"#{Math.round(json.currently.precipProbability * 100)}%\n",
+					"#{DARK_SKY_IMAGE_URL}/#{json.currently.icon}.png"]
 
 				i = 0
 				hourly = []
 				for h in json.hourly.data
-					if i % 3 == 0
-						hourly.push "#{moment.unix(h.time).format("M/D H:mm")}\n" +
+					hourly.push "#{moment.unix(h.time).format("M/D H時")}\n" +
 						"#{h.summary}\n" +
-						"#{DARK_SKY_IMAGE_URL}/#{h.icon}.png\n" +
-						"気温：#{h.temperature}℃\n" +
-						"降水量：#{h.precipIntensity}mm\n" +
-						"降水確率：#{Math.round(h.precipProbability * 100)}%\n" +
-						"湿度：#{Math.round(h.humidity * 100)}%\n"
-					i = i + 1
+						"気温/湿度：#{h.temperature}°C / #{Math.round(h.humidity * 100)}%\n" +
+						"降水量/降水確率：#{h.precipIntensity}mm / #{Math.round(h.precipProbability * 100)}%\n"
 
 				daily = []
 				for d in json.daily.data
 					daily.push "#{moment.unix(d.time).format("M/D")}\n" +
-					"#{d.summary}\n" +
-					"#{DARK_SKY_IMAGE_URL}/#{d.icon}.png\n" +
-					"最高気温：#{d.temperatureHigh}℃\n" +
-					"最低気温：#{d.temperatureLow}℃\n" +
-					"降水量：#{d.precipIntensity}mm\n" +
-					"降水確率：#{Math.round(d.precipProbability * 100)}%\n" +
-					"湿度：#{Math.round(d.humidity * 100)}%\n"
+						"#{d.summary}\n" +
+						"気温(最高/最低)：#{d.temperatureHigh}°C / #{d.temperatureLow}°C\n" +
+						"降水量/降水確率：#{d.precipIntensity}mm / #{Math.round(d.precipProbability * 100)}%\n" +
+						"湿度：#{Math.round(d.humidity * 100)}%\n"
+					daily.push "#{DARK_SKY_IMAGE_URL}/#{d.icon}.png\n"
 
-				cb currently, hourly, daily)
+				cb currently, hourly, daily
+

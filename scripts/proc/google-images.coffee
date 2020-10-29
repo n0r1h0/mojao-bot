@@ -41,6 +41,7 @@ module.exports =
 					if response?.items
 						image = msg.random response.items
 						cb ensureResult(image.link, animated)
+
 					else
 						msg.send "Oops. I had trouble searching '#{query}'. Try later."
 						((error) ->
@@ -51,14 +52,14 @@ module.exports =
 		else
 			msg.send "Google Image Search API is no longer available. " +
 				"Please [setup up Custom Search Engine API](https://github.com/hubot-scripts/hubot-google-images#cse-setup-details)."
-			deprecatedImage(msg, query, animated, faces, cb)
+			cb deprecatedImage(msg, query, animated, faces)
 
-deprecatedImage = (msg, query, animated, faces, cb) ->
+deprecatedImage = (msg, query, animated, faces) ->
 	# Show a fallback image
 	imgUrl = process.env.HUBOT_GOOGLE_IMAGES_FALLBACK ||
 		'http://i.imgur.com/CzFTOkI.png'
 	imgUrl = imgUrl.replace(/\{q\}/, encodeURIComponent(query))
-	cb ensureResult(imgUrl, animated)
+	ensureResult(imgUrl, animated)
 
 # Forces giphy result to use animated version
 ensureResult = (url, animated) ->
@@ -75,3 +76,4 @@ ensureImageExtension = (url) ->
 		url
 	else
 		"#{url}#.png"
+

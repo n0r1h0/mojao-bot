@@ -8,16 +8,18 @@
 gh = require './proc/get_hotentory'
 genre = '(総合|世の中|政治と経済|経済|政治|生活|暮らし|学び|学習|
 テクノロジー|テクノロジ|エンタメ|エンターテイメント|アニメとゲーム|アニメ|ゲーム|おもしろ|動画|画像|動画と画像)'
+pm = require('./proc/postMessage')
 
 module.exports = (robot) ->
 
 	hatebuMe = (keywords, url, msg) ->
 		gh.hatebuMe robot.name, keywords, url, (ret) ->
-			# for val in ret
-				# msg.send { text: val, unfurl_links: false }
+			fields = []
+			for val in ret
+				fields.push { short: true, value: "・<#{val.link}|#{val.title}>" }
 			text = "今日の#{keywords}系に関するニュースはコチラ"
-			msg.send { text: text, as_user: true }
-			msg.send { text: ret.join(), unfurl_links: false }
+			pm.postMessage robot, msg.envelope.room,　[{ pretext: text, fallback: text }], (ts) ->
+				pm.postMessage robot, msg.envelope.room,　[{ fallback: "", fields }], ts, (ts) ->
 
 	robot.respond /はて(ぶ|ブ)$/i, (msg) ->
 		url = 'http://b.hatena.ne.jp/hotentry/it.rss'

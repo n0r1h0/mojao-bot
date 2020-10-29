@@ -18,31 +18,40 @@ module.exports =
 			request(options, (error, response, body) ->
 				json = parser.toJson(body, { object: true })
 				text = "#{ret.YDF.Feature[0].Property.Address} は・・・\n"
-				w0 = json.YDF.Feature.Property.WeatherList.Weather[0]
-				if w0.Rainfall == 0.0
+				w0 = Number(json.YDF.Feature.Property.WeatherList.Weather[0].Rainfall)
+				if w0 == 0
 					text = text + "降ってない"
-				else if w0.Rainfall <= 1.00
+				else if w0 <= 1.00
 					text = text + "ちょっと降ってる"
-				else if w0.Rainfall <= 10.00
+				else if w0 <= 10.00
 					text = text + "降ってる"
 				else
 					text = text + "ザーザー降ってる"
 
-				w1 = json.YDF.Feature.Property.WeatherList.Weather[1]
-				w2 = json.YDF.Feature.Property.WeatherList.Weather[2]
-				w3 = json.YDF.Feature.Property.WeatherList.Weather[3]
-				w4 = json.YDF.Feature.Property.WeatherList.Weather[4]
-				w5 = json.YDF.Feature.Property.WeatherList.Weather[5]
-				w6 = json.YDF.Feature.Property.WeatherList.Weather[6]
+				w1 = Number(json.YDF.Feature.Property.WeatherList.Weather[1].Rainfall)
+				w2 = Number(json.YDF.Feature.Property.WeatherList.Weather[2].Rainfall)
+				w3 = Number(json.YDF.Feature.Property.WeatherList.Weather[3].Rainfall)
+				w4 = Number(json.YDF.Feature.Property.WeatherList.Weather[4].Rainfall)
+				w5 = Number(json.YDF.Feature.Property.WeatherList.Weather[5].Rainfall)
+				w6 = Number(json.YDF.Feature.Property.WeatherList.Weather[6].Rainfall)
 				wall = w1 + w2 + w3 + w4 + w5 + w6
 
+				console.log(w0)
+				console.log(w1)
+				console.log(w2)
+				console.log(w3)
+				console.log(w4)
+				console.log(w5)
+				console.log(w6)
+				console.log(wall)
+
 				# 晴れてたケース
-				if w0.Rainfall == 0.00
-					if w1.Rainfall > 0 && w1.Rainfall <= 2
+				if w0 == 0
+					if w1 > 0 && w1 <= 2
 						text = text + "けど、すぐパラパラ来そう。\n"
-					else if w1.Rainfall > 2 && w1.Rainfall <= 5
+					else if w1 > 2 && w1 <= 5
 						text = text + "けど、この後急に降ってくるね。\n"
-					else if w1.Rainfall > 5
+					else if w1 > 5
 						text = text + "。でも傘は持った方がいいよ。\n"
 					else if wall == 0
 						text = text + "し、しばらくは降らないみたい。\n"
@@ -59,17 +68,17 @@ module.exports =
 
 				# 降ってたケース
 				else
-					if w1.Rainfall == 0 && wall == 0
+					if w1 == 0 && wall == 0
 						text = text + "けど、すぐ止みそう。\n"
-					else if w1.Rainfall == 0 && wall > 0
+					else if w1 == 0 && wall > 0
 						text = text + "。すぐに止むけど、また降りそう。\n"
-					else if w1.Rainfall > 0 && w0.Rainfall > w1.Rainfall && w0.Rainfall > w6.Rainfall
+					else if w1 > 0 && w0 > w1 && w0 > w6
 						text = text + "けど、少し弱まるかな。\n"
-					else if w6.Rainfall > 0 && Math.round(w0.Rainfall) == Math.round(w6.Rainfall)
+					else if w6 > 0 && Math.round(w0) == Math.round(w6)
 						text = text + "し、しばらく降ってると思う。\n"
-					else if Math.round(w0.Rainfall) < Math.round(w6.Rainfall)
+					else if Math.round(w0) < Math.round(w6)
 						text = text + "。だんだん強くなりそう。\n"
-					else if w6.Rainfall == 0
+					else if w6 == 0
 						text = text + "ね。待てば止むかな。\n"
 					else
 						text = text + "。そのあとはよくわかんない。\n"
