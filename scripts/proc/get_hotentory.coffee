@@ -5,7 +5,7 @@
 request = require 'request'
 parser = require 'xml2json'
 
-module.exports =
+module.exports = {
 	hatebuMe: (name, keywords, url, cb) ->
 		options = { url: url, timeout: 2000, headers: { 'user-agent': 'node title fetcher' } }
 
@@ -19,3 +19,4 @@ module.exports =
 				if i == 0
 					cb text
 					return)
+}

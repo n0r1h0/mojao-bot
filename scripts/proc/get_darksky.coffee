@@ -1,28 +1,19 @@
 # Description:
-#   Yahoo!Japan　気象情報API
+#   Dark Skyの呼び出し、戻り値返却
 #
 
 request = require 'request'
-parser = require 'xml2json'
 moment = require 'moment'
+yolp = require './yolp'
 
-YAHOO_GEO_API_URL = "https://map.yahooapis.jp/geocode/V1/geoCoder"
 DARK_SKY_API_URL = "https://dark-sky.p.rapidapi.com"
 DARK_SKY_IMAGE_URL = "https://darksky.net/images/weather-icons"
 
-fetchGeoCode = (keywords, cb) ->
-	url = "#{YAHOO_GEO_API_URL}?appid=#{process.env.HUBOT_YAHOO_APP_ID}&query=#{encodeURI(keywords)}"
-	options = { url: url, timeout: 2000, headers: { 'user-agent': 'node title fetcher' } }
-
-	request(options, (error, response, body) ->
-		json = parser.toJson(body, { object: true })
-		cb json)
-
 module.exports =
-	fetchWeather: (keywords, cb) ->
-		fetchGeoCode keywords, (ret) ->
+	fetchWeather(keywords, cb) ->
+		yolp.fetchGeoCode keywords, (ret) ->
 			cood = ret.YDF.Feature[0].Geometry.Coordinates.split(',')
-			options =
+			options = {
 				method: 'GET',
 				url: "#{DARK_SKY_API_URL}/#{cood[1]},#{cood[0]}",
 				qs: { lang: 'ja', units: 'auto' },
@@ -30,10 +21,11 @@ module.exports =
 					'x-rapidapi-host': 'dark-sky.p.rapidapi.com',
 					'x-rapidapi-key': process.env.HUBOT_DARK_SKY_APP_ID,
 					useQueryString: true
-				}
+				} }
 
 			request options, (error, response, body) ->
 				json = JSON.parse(body)
+				# 現在
 				currently = ["#{json.timezone} の現在の天気",
 					"#{json.currently.summary}\n" +
 					"気温/湿度：#{json.currently.temperature}°C / " +
@@ -43,6 +35,8 @@ module.exports =
 					"#{DARK_SKY_IMAGE_URL}/#{json.currently.icon}.png"]
 
 				i = 0
+
+				# 時間毎
 				hourly = []
 				for h in json.hourly.data
 					hourly.push "#{moment.unix(h.time).format("M/D H時")}\n" +
@@ -50,6 +44,7 @@ module.exports =
 						"気温/湿度：#{h.temperature}°C / #{Math.round(h.humidity * 100)}%\n" +
 						"降水量/降水確率：#{h.precipIntensity}mm / #{Math.round(h.precipProbability * 100)}%\n"
 
+				# 日毎
 				daily = []
 				for d in json.daily.data
 					daily.push "#{moment.unix(d.time).format("M/D")}\n" +
@@ -60,4 +55,3 @@ module.exports =
 					daily.push "#{DARK_SKY_IMAGE_URL}/#{d.icon}.png\n"
 
 				cb currently, hourly, daily
-

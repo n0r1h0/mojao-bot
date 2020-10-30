@@ -10,7 +10,7 @@
 
 cron = require './proc/cronbot'
 yw = require './proc/rainfall'
-ds = require './proc/weather'
+ds = require './proc/get_darksky'
 pm = require './proc/postMessage'
 
 module.exports = (robot) ->
@@ -38,7 +38,8 @@ module.exports = (robot) ->
 	robot.respond /(天気|tenn?ki)(　| )([^ 　]+)$/i, (msg) ->
 		msg.send "ちょっと聞いてみるね"
 		ds.fetchWeather msg.match[3], (currently, hourly, daily) ->
-			pm.postMessage robot, msg.envelope.room, [{ pretext: currently[0], text: currently[1], thumb_url: currently[2] }], (ts) ->
+			pm.postMessage robot, msg.envelope.room,
+			[{ pretext: currently[0], text: currently[1], thumb_url: currently[2] }], (ts) ->
 
 	robot.respond /(天気|tenn?ki)(　| )([^ 　]+)(　| )h/i, (msg) ->
 		timestamp = new Date / 1000 | 0
@@ -57,16 +58,6 @@ module.exports = (robot) ->
 			for i in [0...hourly.length] by 2
 				fields.push { short: true, value: daily[i] }
 			pm.postMessage robot, msg.envelope.room, [{ pretext: "週間天気", fields }], (ts) ->
-
-	# cron.set "0 0 9 * * *", ->
-	# 	d = new Date().getHours()
-	# 	robot.send { room: "general" }, "ヤッホー #{d} 時だよ"
-	# 	url = 'http://b.hatena.ne.jp/hotentry/it.rss'
-	# 	gh.hatebuMe robot.name, "テクノロジー", url, (ret) ->
-	# 		for val in ret
-	# 			if !robot.message.thread_ts?
-	# 				robot.message.thread_ts = robot.message.rawMessage.ts
-	# 			robot.send { room: "general" } , { text: val, unfurl_links: true }
 
 	cron.set "0 0 9 * * *", ->
 		d = new Date().getHours()

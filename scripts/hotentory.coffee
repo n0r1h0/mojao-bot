@@ -6,9 +6,13 @@
 #
 #
 gh = require './proc/get_hotentory'
+pm = require('./proc/postMessage')
+
 genre = '(総合|世の中|政治と経済|経済|政治|生活|暮らし|学び|学習|
 テクノロジー|テクノロジ|エンタメ|エンターテイメント|アニメとゲーム|アニメ|ゲーム|おもしろ|動画|画像|動画と画像)'
-pm = require('./proc/postMessage')
+
+HATEB_URL = "http://b.hatena.ne.jp/hotentry"
+HATENA_FEED_URL = "http://feeds.feedburner.com/hatena/b"
 
 module.exports = (robot) ->
 
@@ -21,7 +25,7 @@ module.exports = (robot) ->
 			pm.postMessage robot, msg.envelope.room,　[{ pretext: text, fallback: text }], (ts) ->
 				pm.postMessage robot, msg.envelope.room,　[{ fallback: "", fields }], ts, (ts) ->
 
-	robot.respond /はて(ぶ|ブ)$/i, (msg) ->
+	robot.respond /(はて(ぶ|ブ)|hatebu)$/i, (msg) ->
 		url = 'http://b.hatena.ne.jp/hotentry/it.rss'
 		hatebuMe "テクノロジー", url, msg
 
@@ -29,24 +33,24 @@ module.exports = (robot) ->
 		keywords = msg.match[3]
 		text = ""
 		if keywords.match(/総合/)
-			url = 'http://feeds.feedburner.com/hatena/b/hotentry.rss'
+			url = "#{HATENA_FEED_URL}/hotentry.rss"
 		if keywords.match(/世の中/)
-			url = 'http://b.hatena.ne.jp/hotentry/social.rss'
+			url = "#{HATEB_URL}social.rss"
 		if keywords.match(/(政治と経済|政治|経済)/i)
-			url = 'http://b.hatena.ne.jp/hotentry/economics.rss'
+			url = "#{HATEB_URL}economics.rss"
 		if keywords.match(/暮らし/)
-			url = 'http://b.hatena.ne.jp/hotentry/life.rss'
+			url = "#{HATEB_URL}life.rss"
 		if keywords.match(/(学び|学習)/i)
-			url = 'http://b.hatena.ne.jp/hotentry/knowledge.rss'
+			url = "#{HATEB_URL}knowledge.rss"
 		if keywords.match(/(テクノロジー|テクノロジ)/i)
-			url = 'http://b.hatena.ne.jp/hotentry/it.rss'
+			url = "#{HATEB_URL}it.rss"
 		if keywords.match(/(エンタメ|エンターテイメント)/i)
-			url = 'http://b.hatena.ne.jp/hotentry/entertainment.rss'
+			url = "#{HATEB_URL}entertainment.rss"
 		if keywords.match(/(アニメとゲーム|アニメ|ゲーム)/i)
-			url = 'http://b.hatena.ne.jp/hotentry/game.rss'
+			url = "#{HATEB_URL}game.rss"
 		if keywords.match(/(おもしろ)/i)
-			url = 'http://b.hatena.ne.jp/hotentry/fun.rss'
+			url = "#{HATEB_URL}fun.rss"
 		if keywords.match(/(動画|画像|動画と画像)/i)
-			url = 'http://feeds.feedburner.com/hatena/b/video.rss'
+			url = "#{HATENA_FEED_URL}/video.rss"
 
 		hatebuMe keywords, url, msg
