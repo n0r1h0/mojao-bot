@@ -10,8 +10,8 @@ YAHOO_WEATHER_API_URL = "https://map.yahooapis.jp/weather/V1/place"
 YAHOO_GEO_API_URL = "https://map.yahooapis.jp/geocode/V1/geoCoder"
 
 module.exports = {
-    fetchRainfal: (keywords, cb) ->
-        fetchGeoCode keywords, (ret) ->
+    fetchRainfall: (keywords, cb) ->
+        this.fetchGeoCode keywords, (ret) ->
             url = "#{YAHOO_WEATHER_API_URL}" +
             "?coordinates=#{ret.YDF.Feature[0].Geometry.Coordinates}" +
             "&appid=#{process.env.HUBOT_YAHOO_APP_ID}"
@@ -38,7 +38,7 @@ predictRainfall = (address, json) ->
 
     # 現在
     w0 = Number(wl.Weather[0].Rainfall)
-    text = text + predictCurret w0
+    text = text + predictCurrent(w0)
 
     # 10分毎の予報
     w1 = Number(wl.Weather[1].Rainfall)
@@ -50,32 +50,32 @@ predictRainfall = (address, json) ->
     wall = w1 + w2 + w3 + w4 + w5 + w6
 
     # 晴れてたケース
-    text = text + predictFutureFromSunny(w1, wall) if w0 == 0
+    return text + predictFutureFromSunny(w1, wall) if w0 == 0
     # 降ってたケース
-    text = text + predictFutureFromRainny(w1, w6, wall) if w0 > 0
+    return text + predictFutureFromRainny(w1, w6, wall) if w0 > 0
 
-predictCurret = (w0) ->
-    "降ってない" if w0 == 0
-    "ちょっと降ってる" if 0 < w0 <= 1.00
-    "降ってる" if 1.00 < w0 <= 10.00
-    "ザーザー降ってる" if 10.00 < w0
+predictCurrent = (w0) ->
+    return "降ってない" if w0 == 0
+    return "ちょっと降ってる" if 0 < w0 <= 1.00
+    return "降ってる" if 1.00 < w0 <= 10.00
+    return "ザーザー降ってる" if 10.00 < w0
 
 predictFutureFromSunny = (w1, wall) ->
-    "けど、すぐ降りそう。\n" if 0 < w1
-    "し、しばらくは降らないみたい。\n" if wall == 0
-    "けど、少ししたら降るかも。\n" if 0 < wall <= 5
-    "のに、これからかなり降るかも。\n" if 5 < wall <= 10
-    "。でもこの後ヤバそう。\n" if 10 < wall <= 30
-    "。でもザーザーくるかも。\n" if 30 < wall
+    return "けど、すぐ降りそう。\n" if 0 < w1
+    return "し、しばらくは降らないみたい。\n" if wall == 0
+    return "けど、少ししたら降るかも。\n" if 0 < wall <= 5
+    return "のに、これからかなり降るかも。\n" if 5 < wall <= 10
+    return "。でもこの後ヤバそう。\n" if 10 < wall <= 30
+    return "。でもザーザーくるかも。\n" if 30 < wall
 
 predictFutureFromRainny = (w1, w6, wall) ->
     if w1 == 0
-        "けど、すぐ止みそう。\n" if wall == 0
-        "。すぐに止むけど、また降りそう。\n" if wall > 0
+        return "けど、すぐ止みそう。\n" if wall == 0
+        return "。すぐに止むけど、また降りそう。\n" if wall > 0
     else
         if w6 > 0
-            "けど、少し弱まってくるかな。\n" if Math.round(w0 * 10) > Math.round(w6 * 10)
-            "し、しばらく降ってると思う。\n" if Math.round(w0) == Math.round(w6)
-            "。だんだん強くなりそう。\n" if Math.round(w0 * 10) < Math.round(w6 * 10)
+            return "けど、少し弱まってくるかな。\n" if Math.round(w0 * 10) > Math.round(w6 * 10)
+            return "し、しばらく降ってると思う。\n" if Math.round(w0) == Math.round(w6)
+            return "。だんだん強くなりそう。\n" if Math.round(w0 * 10) < Math.round(w6 * 10)
         else
-            "ね。待てば止むっぽい。\n"
+            return "ね。待てば止むっぽい。\n"

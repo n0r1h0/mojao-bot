@@ -5,6 +5,10 @@ cd ../
 set -e
 
 npm install
+if [ -f .env ]; then
+  source .env
+fi
+
 export PATH="node_modules/.bin:node_modules/hubot/node_modules/.bin:$PATH"
 
 coffee node_modules/.bin/hubot --name "mojao" -a slack
