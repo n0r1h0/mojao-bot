@@ -4,6 +4,5 @@
   "hubot-help",
   "hubot-redis-brain",
   "hubot-rules",
-  "hubot-shipit",
-  "hubot-yahoo-amagumo"
+  "hubot-shipit"
 ]
