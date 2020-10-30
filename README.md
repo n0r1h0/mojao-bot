@@ -12,8 +12,6 @@ bot機能として以下の機能を実装しています。
 ## 変数
 利用には以下の変数設定が必要です。
 
-hubot-heroku-keepaliveを使っているため以下が必要です。
-
 | 変数 | 値 | 備考 |
 |-|-|-|
 |HUBOT_HEROKU_KEEPALIVE_URL|https://***.herokuapp.com/|herokuのドメイン|
