@@ -23,5 +23,6 @@ bot機能として以下の機能を実装しています。
 |HUBOT_GOOGLE_CSE_KEY|***|google APIのAPIキー|
 |HUBOT_YAHOO_APP_ID|***|[YOLP](https://developer.yahoo.co.jp/webapi/map/)のAPIキー|
 |HUBOT_DARK_SKY_APP_ID|***|Dark SkyのAPIキー※|
+
 ※Dark SKyのAPI利用登録は停止しているため、[Rakuten Rapid API](https://api.rakuten.co.jp/ja/)から取得しました。
 
