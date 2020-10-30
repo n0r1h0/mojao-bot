@@ -65,3 +65,4 @@ typings/
 
 .hubot_history
 bfg-1.13.0.jar
+.DS_Store
