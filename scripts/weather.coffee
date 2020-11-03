@@ -10,8 +10,9 @@
 
 cron = require './proc/cronbot'
 yolp = require './proc/yolp'
-ds = require './proc/get_darksky'
+ds = require './proc/get_weatherapi'
 pm = require './proc/postMessage'
+moment = require 'moment'
 
 module.exports = (robot) ->
 	robot.respond /(雨|ame)[　 ](.+)/i, (msg) ->
@@ -35,7 +36,7 @@ module.exports = (robot) ->
 				[{ pretext: "#{tz} の今日の予報だよ", fields, thumb_url: imageUrl }], (ts) ->
 
 	# の予報
-	robot.respond /(天気|tenn?ki)[　 ]([^ 　]+)(　| )[hd]/i, (msg) ->
+	robot.respond /(天気|tenn?ki)[　 ]([^ 　]+)[　 ]([hd])/i, (msg) ->
 		msg.send "ちょっと聞いてみるね"
 		getWeather msg.match[3], msg.match[2], (tz, fields) ->
 			pm.postMessage robot, msg.envelope.room,
@@ -55,24 +56,23 @@ getWeather = (option, place, cb) ->
 		fields = []
 		if option == "c"
 			# 今日の予報は週間予報の当日から取得（否現在の天気）
-			pred = daily[0]
-			text = "#{pred.time}\n" + "#{pred.summary}\n" +
-				"気温：#{pred.temperatureHigh}°C / #{pred.temperatureLow}°C\n" +
-				"降水量/降水確率：#{pred.precipIntensity}mm / #{pred.precipProbability}%\n"
+			pred = currently[0]
+			text = "#{pred.date}\n" + "#{pred.summary}\n" +
+				":thermometer:：#{pred.maxTemperature}°C / #{pred.minTemperature}°C\n" +
+				":umbrella:：#{pred.precipIntensity}mm / #{pred.precipProbability}%\n"
 			fields.push { short: true, value: text }
 			imageUrl = pred.imageUrl
-		else if option == "h"
-			for i in [0...16] by 2
-				pred = hourly[i]
-				text = "#{pred.time}\n" + "#{pred.summary}\n" +
-					"気温/湿度：#{pred.temperature}°C / #{pred.humidity}%\n" +
-					"降水量/降水確率：#{pred.precipIntensity}mm / #{pred.precipProbability}%\n"
+		else if option == 'd'
+			for pred in daily
+				text = "#{pred.date}\n" + "#{pred.summary}\n" +
+					":thermometer:：#{pred.maxTemperature}°C / #{pred.minTemperature}°C\n" +
+					":umbrella:：#{pred.precipIntensity}mm / #{pred.precipProbability}%\n"
 				fields.push { short: true, value: text }
 		else
-			for i in [0...8]
-				pred = daily[i]
-				text = "#{pred.time}\n" + "#{pred.summary}\n" +
-					"気温：#{pred.temperatureHigh}°C / #{pred.temperatureLow}°C\n" +
-					"降水量/降水確率：#{pred.precipIntensity}mm / #{pred.precipProbability}%\n"
+			h = parseInt(moment().format('H'), 10)
+			for i in [h...h + 24] by 3
+				pred = hourly[i]
+				text = "#{pred.date}\n" + "#{pred.summary}\n" +
+					":thermometer:/:umbrella:：#{pred.temperature}°C / #{pred.precipProbability}%\n"
 				fields.push { short: true, value: text }
-		cb currently[0].timezone, fields, imageUrl
+		cb currently[0].cityname, fields, imageUrl
