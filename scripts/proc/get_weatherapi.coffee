@@ -12,11 +12,12 @@ API_URL = "https://#{API_HOST}/forecast.json"
 module.exports = {
 	fetchWeather: (keywords, cb) ->
 		yolp.fetchGeoCode keywords, (ret) ->
+			moment.locale("ja")
 			coord = ret.YDF.Feature[0].Geometry.Coordinates.split(',')
 			options = {
 				method: 'GET',
 				url: API_URL,
-				qs: { lang: 'ja', days: '14', q: "#{coord[1]},#{coord[0]}" },
+				qs: { lang: 'ja', days: '3', q: "#{coord[1]},#{coord[0]}" },
 				headers: {
 					'x-rapidapi-host': API_HOST,
 					'x-rapidapi-key': process.env.RAPIDAPI_KEY,
@@ -30,7 +31,7 @@ module.exports = {
 				list = json.forecast.forecastday
 				# 現在
 				currently = [{
-					date: moment.unix(list[0].date_epoch).format('M/D'),
+					date: moment.unix(list[0].date_epoch).format('M/D(ddd)'),
 					cityname: city.name,
 					summary: list[0].day.condition.text,
 					maxTemperature: list[0].day.maxtemp_c,
@@ -41,34 +42,48 @@ module.exports = {
 					imageUrl: "https:#{list[0].day.condition.icon}"
 				}]
 
-				# 日毎
-				daily = []
-				# 時間毎
-				hourly = []
-				for d in list
-					daily.push {
-						date: moment.unix(d.date_epoch).format('M/D'),
-						cityname: city.name,
-						summary: d.day.condition.text,
-						maxTemperature: d.day.maxtemp_c,
-						minTemperature: d.day.mintemp_c,
-						humidity: d.day.humidity,
-						precipIntensity: d.day.totalprecip_mm,
-						precipProbability: d.day.daily_chance_of_rain,
-						imageUrl: "https:#{d.day.condition.icon}"
-					}
+				current = moment().add(3, 'd')
+				getForwardDay = (dt, list, cb) ->
+					options.qs.dt = dt.format('YYYY-MM-DD')
+					request options, (error, response, body) ->
+						json = JSON.parse(body)
+						marge = list.concat(json.forecast.forecastday)
+						if dt.diff(moment(), 'd') < 6
+							dt = dt.add(1, 'd')
+							getForwardDay(dt, marge, cb)
+						else
+							cb(marge)
 
-					for h in d.hour
-						hourly.push {
-							date: moment.unix(h.time_epoch).format('M/D H時'),
+				getForwardDay(current, list, (marge) ->
+					# 日毎
+					daily = []
+					# 時間毎
+					hourly = []
+					for d in marge
+						daily.push {
+							date: moment.unix(d.date_epoch).format('M/D(ddd)'),
 							cityname: city.name,
-							summary: h.condition.text,
-							temperature: h.temp_c,
-							humidity: h.humidity,
-							precipIntensity: h.precip_mm,
-							precipProbability: h.chance_of_rain,
-							imageUrl: "https:#{h.condition.icon}"
+							summary: d.day.condition.text,
+							maxTemperature: d.day.maxtemp_c,
+							minTemperature: d.day.mintemp_c,
+							humidity: d.day.humidity,
+							precipIntensity: d.day.totalprecip_mm,
+							precipProbability: d.day.daily_chance_of_rain,
+							imageUrl: "https:#{d.day.condition.icon}"
 						}
 
-				cb currently, hourly, daily
+						for h in d.hour
+							hourly.push {
+								date: moment.unix(h.time_epoch).format('M/D(ddd) H時'),
+								cityname: city.name,
+								summary: h.condition.text,
+								temperature: h.temp_c,
+								humidity: h.humidity,
+								precipIntensity: h.precip_mm,
+								precipProbability: h.chance_of_rain,
+								imageUrl: "https:#{h.condition.icon}"
+							}
+
+					cb currently, hourly, daily
+				)
 }

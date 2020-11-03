@@ -47,7 +47,7 @@ module.exports = (robot) ->
 		robot.send { room: "general" }, "ヤッホー #{d} 時だよ"
 		robot.send { room: "general" }, "今日の天気はコチラ！"
 		getWeather 'h', '目黒', (tz, fields) ->
-			pm.postMessage robot, msg.envelope.room,
+			pm.postMessage robot, { room: "general" },
 				[{ pretext: "#{tz} の#{if msg.match[3] == 'h' then '2時間毎の' else '週間'}天気", fields }], (ts) ->
 
 getWeather = (option, place, cb) ->
