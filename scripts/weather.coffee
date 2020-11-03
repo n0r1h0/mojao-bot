@@ -10,7 +10,7 @@
 
 cron = require './proc/cronbot'
 yolp = require './proc/yolp'
-ds = require './proc/get_weatherapi'
+weather = require './proc/get_weatherapi'
 pm = require './proc/postMessage'
 moment = require 'moment'
 
@@ -52,7 +52,7 @@ module.exports = (robot) ->
 
 getWeather = (option, place, cb) ->
 	timestamp = new Date / 1000 | 0
-	ds.fetchWeather place, (currently, hourly, daily) ->
+	weather.fetchWeather place, option, (currently, hourly, daily) ->
 		fields = []
 		if option == "c"
 			# 今日の予報は週間予報の当日から取得（否現在の天気）

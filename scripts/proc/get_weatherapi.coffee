@@ -10,7 +10,7 @@ API_HOST = 'weatherapi-com.p.rapidapi.com'
 API_URL = "https://#{API_HOST}/forecast.json"
 
 module.exports = {
-	fetchWeather: (keywords, cb) ->
+	fetchWeather: (keywords, option, cb) ->
 		yolp.fetchGeoCode keywords, (ret) ->
 			moment.locale("ja")
 			coord = ret.YDF.Feature[0].Geometry.Coordinates.split(',')
@@ -42,17 +42,19 @@ module.exports = {
 					imageUrl: "https:#{list[0].day.condition.icon}"
 				}]
 
+				offset = 2
+				offset = 7 if option == 'd'
 				current = moment().add(3, 'd')
 				getForwardDay = (dt, list, cb) ->
-					options.qs.dt = dt.format('YYYY-MM-DD')
-					request options, (error, response, body) ->
-						json = JSON.parse(body)
-						marge = list.concat(json.forecast.forecastday)
-						if dt.diff(moment(), 'd') < 6
+					if dt.diff(moment(), 'd') < offset
+						options.qs.dt = dt.format('YYYY-MM-DD')
+						request options, (error, response, body) ->
+							json = JSON.parse(body)
+							marge = list.concat(json.forecast.forecastday)
 							dt = dt.add(1, 'd')
 							getForwardDay(dt, marge, cb)
-						else
-							cb(marge)
+					else
+						cb(marge ? list)
 
 				getForwardDay(current, list, (marge) ->
 					# 日毎
