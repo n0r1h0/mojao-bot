@@ -5,7 +5,7 @@
 m = require('moment')
 
 module.exports = {
-    postMessage: (robot, room, attaches, thread_ts, cb) ->
+    postMessage: (robot, channel, attaches, thread_ts, cb) ->
         cb = thread_ts if typeof thread_ts == 'function'
 
         ts = m().unix()
@@ -16,7 +16,7 @@ module.exports = {
         attachments: [Object.assign(attachments[0], attaches[0])], thread_ts: thread_ts }
         
         client = robot.adapter.client
-        client.web.chat.postMessage(room, '', options)
+        client.web.chat.postMessage(channel, '', options)
         .then (result) ->
             cb result.ts
         .catch (error) ->
