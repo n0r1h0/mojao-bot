@@ -13,6 +13,10 @@ module.exports = {
 	fetchWeather: (keywords, option, cb) ->
 		yolp.fetchGeoCode keywords, (ret) ->
 			moment.locale("ja")
+
+			# 地域の取得に失敗した場合callbackにnullを返却
+			return cb() if ret.YDF.ResultInfo.Count == '0'
+
 			coord = ret.YDF.Feature[0].Geometry.Coordinates.split(',')
 			options = {
 				method: 'GET',
@@ -63,7 +67,7 @@ module.exports = {
 					hourly = []
 					for d in marge
 						daily.push {
-							date: moment.unix(d.date_epoch).format('M/D(ddd)'),
+							date: moment.unix(d.date_epoch).format('D(ddd)'),
 							cityname: city.name,
 							summary: d.day.condition.text,
 							maxTemperature: d.day.maxtemp_c,
@@ -76,7 +80,7 @@ module.exports = {
 
 						for h in d.hour
 							hourly.push {
-								date: moment.unix(h.time_epoch).format('M/D(ddd) H時'),
+								date: moment.unix(h.time_epoch).format('H時'),
 								cityname: city.name,
 								summary: h.condition.text,
 								temperature: h.temp_c,
